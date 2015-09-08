@@ -4,10 +4,18 @@ local serialization = require("serialization")
 local shell = require("shell")
 
 local settings
-local settingsFilename = "ftp.settings"
-local settingsFile = filesystem.open(settingsFilename, "rb")
+local home = os.getenv("HOME")
+local settingsFilename = filesystem.concat(home, "ftp.settings")
+local settingsFile = io.open(settingsFilename, "rb")
 if not settingsFile then
-  local settingsFile = filesystem.open(settingsFilename, "wb")
+  print("Could not find settings.")
+  local settingsFile, error = io.open(settingsFilename, "wb")
+  if not settingsFile then
+    print("Template could not be created (" .. error .. ")")
+    print("Please make sure the directory '" .. home .. "' exists")
+    return
+  end
+  
   local t =
   {
     proxy =
@@ -27,7 +35,6 @@ if not settingsFile then
   settingsFile:write(contents)
   settingsFile:close()
   
-  print("Could not find settings.")
   print("Template created.")
   print("Please edit '" .. settingsFilename .. "' and restart program")
   return
