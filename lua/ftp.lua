@@ -79,7 +79,7 @@ local function getPathArgument(msg)
 end
 
 local function findAbsolutePath(path, base)
-  if path[1] ~= "/" then
+  if path:sub(1, 1) ~= "/" then
     return filesystem.concat(base, path)
   else
     return path
