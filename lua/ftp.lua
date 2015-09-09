@@ -177,14 +177,15 @@ local function passiveList(client, passiveClient)
   local buffer = ""
   local maxSendSize = settings.bufferSize
   for f in filesystem.list(client.currentDirectory) do
+    local fullPath = filesystem.concat(client.currentDirectory, f)
     local filename = filesystem.name(f)
     local permission
-    if filesystem.isDirectory(f) then
+    if f:sub(-1) == "/" then
       permission = "drwxr-xr-x"
     else
       permission = "-rw-r--r--"
     end
-    local size = filesystem.size(f)
+    local size = filesystem.size(fullPath)
     local msg = string.format("%s 1 user group %d Jan 01  2015 %s\r\n", permission, size, filename)
     buffer = buffer .. msg
     while #buffer > maxSendSize do
